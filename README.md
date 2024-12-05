@@ -20,42 +20,42 @@ npm install --save @red-scoop/nestjs-captcha
 
 ```typescript
 // app.module.ts
-import {HttpException, Module} from "@nestjs/common";
-import {CaptchaModule, CaptchaVerifyError} from "@red-scoop/nestjs-captcha";
-import {getClientIp} from "request-ip";
+import { HttpException, Module } from '@nestjs/common';
+import { CaptchaModule, CaptchaVerifyError } from '@red-scoop/nestjs-captcha';
+import { getClientIp } from 'request-ip';
 
 @Module({
 	imports: [
 		CaptchaModule.forRoot({
 			getResponse: (req) => {
 				// client should send captcha response 
-				return req.header(`X-Captcha-Response`) as string 
+				return req.header(`X-Captcha-Response`) as string;
 			},
 			getClientIp: (req) => {
-				return getClientIp(req)
+				return getClientIp(req);
 			},
 			createHttpException: (e) => {
-					if (e instanceof CaptchaVerifyError) {
-							throw new ForbiddenException({
-								message: "Captcha not passed",
-								errorCodes: e.data["error-codes"],
-							})
-						}
-						throw new ForbiddenException({
-							message: `Captcha provider return unexpected result`
-						})
+				if (e instanceof CaptchaVerifyError) {
+					throw new ForbiddenException({
+						message: 'Captcha not passed',
+						errorCodes: e.data['error-codes'],
+					});
+				}
+				throw new ForbiddenException({
+					message: `Captcha provider return unexpected result`,
+				});
 			},
 			skipIf: (req) => {
-				return req.user.role === "admin"
+				return req.user.role === 'admin';
 			},
 			hcaptcha: {
-				secretKey: "<secretKey>"
+				secretKey: '<secretKey>',
 			},
 			recaptcha: {
-				secretKey: "<secretKey>"
-			}
-		})
-	]
+				secretKey: '<secretKey>',
+			},
+		}),
+	],
 })
 export class AppModule {}
 ```
