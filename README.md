@@ -1,20 +1,10 @@
-# Captcha module 
-
-## Table of Contents
-
-
+# Captcha module
 
 ## Installation
-
 
 ```shell
 npm install --save @red-scoop/nestjs-captcha 
 ```
-
-
-
-
-
 
 ## Usage
 
@@ -28,7 +18,6 @@ import { getClientIp } from 'request-ip';
 	imports: [
 		CaptchaModule.forRoot({
 			getResponse: (req) => {
-				// client should send captcha response 
 				return req.header(`X-Captcha-Response`) as string;
 			},
 			getClientIp: (req) => {
@@ -46,7 +35,7 @@ import { getClientIp } from 'request-ip';
 				});
 			},
 			skipIf: (req) => {
-				return req.user.role === 'admin';
+				return process.NODE_ENV !== 'production';
 			},
 			hcaptcha: {
 				secretKey: '<secretKey>',
@@ -60,11 +49,10 @@ import { getClientIp } from 'request-ip';
 export class AppModule {}
 ```
 
-
 ```typescript
 // app.controller.ts
-import {Controller, Post, UseGuards} from "@nestjs/common";
-import {HCaptchaGuard, RECaptchaGuard} from "@red-scoop/nestjs-captcha";
+import { Controller, Post, UseGuards } from "@nestjs/common";
+import { HCaptchaGuard, RECaptchaGuard } from "@red-scoop/nestjs-captcha";
 
 
 @Controller("app")
@@ -75,8 +63,8 @@ export class AppController {
 	async recaptcha() {
 		// Logic...
 	}
-	
-	
+
+
 	@Post(`hcaptcha`)
 	@UseGuards(HCaptchaGuard) // endpoint protected by hcaptcha
 	async hcaptcha() {

@@ -3,14 +3,13 @@ import { defaults } from "jest-config"
 import * as fs from "fs";
 import * as path from "path";
 import {pathsToModuleNameMapper} from "ts-jest";
-import ms from "ms";
 const tsconfigData = JSON.parse((fs.readFileSync(path.join(__dirname, "tsconfig.json")).toString()))
 
 const IGNORE_COVERAGE_AND_TESTING_DIRS = ["<rootDir>/node_modules/", "<rootDir>/build/", "<rootDir>/coverage/", "<rootDir>/.next/", "<rootDir>/dist/"]
 const config: Config.InitialOptions = {
 	...defaults,
 	roots: ["./"], // access via <rootDir>
-	testTimeout: ms("5m"),
+	testTimeout: 5 * 60 * 1000,
 	verbose: true,
 	// mocks
 	clearMocks: true,

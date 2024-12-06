@@ -3,7 +3,6 @@ import {Test} from "@nestjs/testing";
 import {CaptchaModule} from "../captcha.module";
 import axios, {AxiosInstance} from "axios";
 import {HCaptchaGuard} from "../guards/hcaptcha.guard";
-import {getClientIp} from "request-ip";
 import {CaptchaErrorCode} from "../captcha-error-code.enum";
 import CaptchaExceptions, {CaptchaVerifyError} from "../captcha.exceptions";
 
@@ -34,7 +33,7 @@ describe(`HCaptchaGuard`, () => {
 						return req.header(responseHeader) as string
 					},
 					getClientIp: (req) => {
-						return getClientIp(req)
+						return "127.0.0.1"
 					},
 					hcaptcha: {
 						secretKey: "<secretKey>"
