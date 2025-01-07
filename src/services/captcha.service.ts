@@ -1,7 +1,8 @@
-import {Logger} from "@nestjs/common";
-import {CaptchaModuleOptions} from "../captcha.module";
-import {Request} from "express";
-import CaptchaExceptions from "../captcha.exceptions";
+import { Logger } from '@nestjs/common';
+import { CaptchaModuleOptions } from '../captcha.module';
+import { Request } from 'express';
+import CaptchaExceptions from '../captcha.exceptions';
+import { Agent } from 'node:https';
 
 // Выдели отдельные сервисы под hcaptcha и recaptcha. Для них нужны отдельные сервисы.
 
@@ -12,15 +13,22 @@ export type CaptchaRequestData = {
 	ip?: string | null
 }
 
-export type CaptchaServiceOptions = Omit<CaptchaModuleOptions, "hcaptcha" | "recaptcha"> & {
+export type CaptchaServiceOptions = Omit<CaptchaModuleOptions, 'hcaptcha' | 'recaptcha'> & {
 	secretKey?: string,
 	// create exception factory
 }
 
 export abstract class CaptchaService {
-	protected logger = new Logger(CaptchaService.name)
+	protected logger = new Logger(CaptchaService.name);
+	protected agent: Agent;
 
-	protected constructor(protected options: CaptchaServiceOptions) {}
+	protected constructor(protected options: CaptchaServiceOptions) {
+		this.agent = new Agent({
+			keepAlive: true,
+			keepAliveMsecs: 30_000,
+			timeout: 60_000,
+		});
+	}
 
 
 	protected abstract request(data: CaptchaRequestData): Promise<boolean>
@@ -31,26 +39,26 @@ export abstract class CaptchaService {
 			skipIf,
 			getClientIp,
 			getResponse,
-			secretKey
-		} = this.options
+			secretKey,
+		} = this.options;
 
 
 		if (!secretKey) {
-			return true
+			return true;
 		}
 
-		if (typeof skipIf !== "undefined" && skipIf(req)) {
-			return true
+		if (typeof skipIf !== 'undefined' && skipIf(req)) {
+			return true;
 		}
 
-		const ip = getClientIp && getClientIp(req)
-		const response = getResponse(req)
+		const ip = getClientIp && getClientIp(req);
+		const response = getResponse(req);
 
 		return this.request({
 			response,
 			secret: secretKey,
-			ip
-		})
+			ip,
+		});
 
 	}
 

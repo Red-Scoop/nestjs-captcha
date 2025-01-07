@@ -27,6 +27,8 @@ export class RECaptchaService extends CaptchaService {
 				"Content-Type": "application/json"
 			},
 			responseType: "json",
+			httpAgent: this.agent,
+			httpsAgent: this.agent
 		})
 		const data = resp.data as {
 			success: boolean,

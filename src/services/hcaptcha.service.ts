@@ -21,7 +21,8 @@ export class HCaptchaService extends CaptchaService {
 		const query = qs.stringify({
 			secret,
 			response,
-			remoteip: ip
+			remoteip: ip,
+
 		})
 
 
@@ -31,6 +32,8 @@ export class HCaptchaService extends CaptchaService {
 				"Content-Type": "application/json"
 			},
 			responseType: "json",
+			httpAgent: this.agent,
+			httpsAgent: this.agent
 		})
 
 

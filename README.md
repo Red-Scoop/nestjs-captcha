@@ -59,14 +59,14 @@ import { HCaptchaGuard, RECaptchaGuard } from "@red-scoop/nestjs-captcha";
 export class AppController {
 
 	@Post(`recaptcha`)
-	@UseGuards(RECaptchaGuard) // endpoint protected by recaptcha
+	@UseGuards(RECaptchaGuard)
 	async recaptcha() {
 		// Logic...
 	}
 
 
 	@Post(`hcaptcha`)
-	@UseGuards(HCaptchaGuard) // endpoint protected by hcaptcha
+	@UseGuards(HCaptchaGuard)
 	async hcaptcha() {
 		// Logic...
 	}

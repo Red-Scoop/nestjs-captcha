@@ -51,7 +51,7 @@ export class CaptchaModule {
 				},
 
 			],
-			exports: [HCaptchaService, RECaptchaService], // К этому будут иметь доступ все гуарды.
+			exports: [HCaptchaService, RECaptchaService],
 			controllers: [],
 			global: true
 		}
